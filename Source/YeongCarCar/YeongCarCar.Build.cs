@@ -8,6 +8,15 @@ public class YeongCarCar : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "ChaosVehicles", "PhysicsCore" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine",
+			"InputCore", "EnhancedInput",
+			"ChaosVehicles", "PhysicsCore",
+			"UMG"
+		});
+		
+		
+		PublicIncludePaths.AddRange(new string[] { "YeongCarCar" });
 	}
 }

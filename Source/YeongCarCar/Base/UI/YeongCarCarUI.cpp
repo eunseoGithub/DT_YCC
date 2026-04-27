@@ -1,6 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-
 #include "YeongCarCarUI.h"
 
 void UYeongCarCarUI::UpdateSpeed(float NewSpeed)

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "YeongCarCarWheelRear.h"
+#include "Base/Car/YeongCarCarWheelRear.h"
 #include "YeongCarCarOffroadWheelRear.generated.h"
 
 /**

@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "YeongCarCarPawn.h"
-#include "YeongCarCarWheelFront.h"
-#include "YeongCarCarWheelRear.h"
+#include "Base/Car/YeongCarCarWheelFront.h"
+#include "Base/Car/YeongCarCarWheelRear.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
