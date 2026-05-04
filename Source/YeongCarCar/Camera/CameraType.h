@@ -1,3 +1,7 @@
+#pragma once
+#include "CoreMinimal.h"
+#include "CameraType.generated.h"
+
 UENUM(BlueprintType)
 enum class ECameraSensorPreset : uint8
 {

@@ -9,11 +9,8 @@
 #include "Engine/TextureRenderTarget2D.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogCameraSensor, Log, All);
-// Sets default values for this component's properties
 UCameraSensorComponent::UCameraSensorComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 	
 	SceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SensorSceneCapture"));
@@ -21,16 +18,13 @@ UCameraSensorComponent::UCameraSensorComponent()
 	
 }
 
-
-// Called when the game starts
 void UCameraSensorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
-	
+	InitializeCapture();
+	ApplyPreset(Preset);
 }
-// 생성자에서 등록실패시 다시 등록
+
 void UCameraSensorComponent::OnRegister()
 {
 	Super::OnRegister();
@@ -47,7 +41,6 @@ void UCameraSensorComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-// 메크로 에디터전용 나중에 패키징에서 이함수 제외용도
 #if WITH_EDITOR
 void UCameraSensorComponent::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -59,6 +52,7 @@ void UCameraSensorComponent::PostEditChangeProperty(FPropertyChangedEvent& Prope
 	}
 }
 #endif
+
 void UCameraSensorComponent::ApplyPreset(ECameraSensorPreset NewPreset)
 {
 	Preset = NewPreset;
@@ -180,7 +174,6 @@ void UCameraSensorComponent::CaptureOnce()
 	}
 }
 
-//해상도 설정
 void UCameraSensorComponent::SetCaptureRate(float Hz)
 {
 	Intrinsics.FrameRate = FMath::Clamp(Hz, 1.0f, 120.0f);
@@ -235,6 +228,7 @@ void UCameraSensorComponent::ConfigureSceneCapture()
 	SceneCapture->PostProcessBlendWeight = 1.0f;
 }
 
+
 void UCameraSensorComponent::CreateRenderTarget()
 {
 	RenderTarget = NewObject<UTextureRenderTarget2D>(this, TEXT("SensorRenderTarget"));
@@ -244,7 +238,7 @@ void UCameraSensorComponent::CreateRenderTarget()
 	RenderTarget->UpdateResourceImmediate(true);
 }
 
-// 타이머초기화
+
 void UCameraSensorComponent::StopCaptureTimer()
 {
 	if (GetWorld())
@@ -410,6 +404,3 @@ void UCameraSensorComponent::SaveCameraImage()
 	UE_LOG(LogCameraSensor, Verbose, TEXT("Saved %dx%d image → %s (%lld bytes)"),
 		Width, Height, *FilePath, CompressedData.Num());
 }
-
-
-
