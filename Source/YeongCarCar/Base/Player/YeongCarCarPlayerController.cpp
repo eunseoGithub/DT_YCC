@@ -1,6 +1,7 @@
 #include "YeongCarCarPlayerController.h"
 #include "Base/Car/YeongCarCarPawn.h"
 #include "Base/UI/YeongCarCarUI.h"
+#include "Base/UI/LapTimerWidget.h"
 #include "EnhancedInputSubsystems.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 
@@ -14,6 +15,20 @@ void AYeongCarCarPlayerController::BeginPlay()
 	check(VehicleUI);
 
 	VehicleUI->AddToViewport();
+
+	if (LapTimerWidgetClass)
+	{
+		LapTimerWidget = CreateWidget<ULapTimerWidget>(this, LapTimerWidgetClass);
+		if (LapTimerWidget)
+		{
+			LapTimerWidget->AddToViewport(5);
+			LapTimerWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			// OnPossess가 BeginPlay보다 먼저 호출된 경우 여기서도 바인딩
+			if (VehiclePawn)
+				LapTimerWidget->InitWithSplineFollower(VehiclePawn->GetSplineFollower());
+		}
+	}
 }
 
 void AYeongCarCarPlayerController::SetupInputComponent()
@@ -51,4 +66,7 @@ void AYeongCarCarPlayerController::OnPossess(APawn* InPawn)
 
 	// get a pointer to the controlled pawn
 	VehiclePawn = CastChecked<AYeongCarCarPawn>(InPawn);
+
+	if (LapTimerWidget)
+		LapTimerWidget->InitWithSplineFollower(VehiclePawn->GetSplineFollower());
 }

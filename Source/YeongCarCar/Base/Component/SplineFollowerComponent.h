@@ -8,6 +8,8 @@
 
 class AYeongCarCarPawn;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLapCompleted, int32 /*LapNumber*/, float /*LapTime_s*/);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class YEONGCARCAR_API USplineFollowerComponent : public UActorComponent
 {
@@ -15,6 +17,11 @@ class YEONGCARCAR_API USplineFollowerComponent : public UActorComponent
 
 public:
 	USplineFollowerComponent();
+
+	FOnLapCompleted OnLapCompleted;
+
+	FORCEINLINE int32 GetLapNumber()  const { return LapNumber; }
+	FORCEINLINE float GetLapElapsed() const { return LapElapsed; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -97,4 +104,7 @@ private:
 	int32 CurrentPointIndex = 0;
 	bool  bClosedLoop = false;
 	float SmoothedTargetSpeed = 0.f;
+
+	int32 LapNumber  = 0;
+	float LapElapsed = 0.f;
 };

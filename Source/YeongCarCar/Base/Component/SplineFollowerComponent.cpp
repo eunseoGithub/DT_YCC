@@ -138,6 +138,8 @@ void USplineFollowerComponent::BuildPath()
 	}
 
 	SmoothedTargetSpeed = MaxSpeed;
+	LapNumber  = 0;
+	LapElapsed = 0.f;
 	SetComponentTickEnabled(true);
 
 	UE_LOG(LogPathFollowingComponent, Log, TEXT("SplineFollower: %d pts, loop=%s, start=%d"),
@@ -305,6 +307,8 @@ void USplineFollowerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 		Velocity / (60.f * FMath::Max(ResampleSpacing, 1.f))
 	) + 1;
 
+	const int32 PrevIdx = CurrentPointIndex;
+
 	for (int32 S = 0; S < MaxSteps && CurrentPointIndex < Max; ++S)
 	{
 		const int32 Next = (CurrentPointIndex + 1) % PathPoints.Num();
@@ -314,6 +318,15 @@ void USplineFollowerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 		else
 			break;
 	}
+
+	if (bClosedLoop && CurrentPointIndex < PrevIdx)
+	{
+		LapNumber++;
+		OnLapCompleted.Broadcast(LapNumber, LapElapsed);
+		UE_LOG(LogPathFollowingComponent, Log, TEXT("SplineFollower: Lap %d — %.2fs"), LapNumber, LapElapsed);
+		LapElapsed = 0.f;
+	}
+	LapElapsed += DeltaTime;
 
 	if (!bClosedLoop && CurrentPointIndex >= PathPoints.Num() - 2)
 	{
