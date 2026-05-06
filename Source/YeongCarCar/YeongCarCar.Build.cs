@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -13,7 +13,8 @@ public class YeongCarCar : ModuleRules
 			"Core", "CoreUObject", "Engine",
 			"InputCore", "EnhancedInput",
 			"ChaosVehicles", "PhysicsCore",
-			"UMG"
+			"UMG", "Landscape", "RenderCore",
+			"RHI", "ImageWrapper"
 		});
 		
 		
