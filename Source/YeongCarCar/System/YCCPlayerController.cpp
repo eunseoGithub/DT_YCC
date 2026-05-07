@@ -1,37 +1,37 @@
 #include "YCCPlayerController.h"
-#include "YCCPlayerController.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "Base/Car/YeongCarCarPawn.h"
 #include "Components/SlateWrapperTypes.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/YCCSensorViewWidget.h"
 
 void AYCCPlayerController::ToggleSensorView(UTextureRenderTarget2D* InCameraRT)
 {
-	// if (!SensorViewWidget) return;
-	//
-	// if (InCameraRT)
-	// {
-	// 	SensorViewWidget->SetRenderTarget(InCameraRT);
-	// }
-	// SensorViewWidget->ToggleCameraView();
+	if (!SensorViewWidget) return;
+
+	if (InCameraRT)
+	{
+		SensorViewWidget->SetRenderTarget(InCameraRT);
+	}
+	SensorViewWidget->ToggleCameraView();
 }
 
 void AYCCPlayerController::ToggleLidarView(UTexture2D* InLidarRT)
 {
-	// if (!SensorViewWidget) return;
-	//
-	// if (InLidarRT)
-	// {
-	// 	SensorViewWidget->SetLidarRenderTarget(InLidarRT);
-	// }
-	// SensorViewWidget->ToggleLidarView();
+	if (!SensorViewWidget) return;
+
+	if (InLidarRT)
+	{
+		SensorViewWidget->SetLidarRenderTarget(InLidarRT);
+	}
+	SensorViewWidget->ToggleLidarView();
 }
 
 bool AYCCPlayerController::IsLidarViewVisible() const
 {
-	return true;//SensorViewWidget && SensorViewWidget->IsLidarViewVisible();
+	return SensorViewWidget && SensorViewWidget->IsLidarViewVisible();
 }
 
 void AYCCPlayerController::BeginPlay()
@@ -40,15 +40,15 @@ void AYCCPlayerController::BeginPlay()
 	
 	bAttachToPawn = true;
 
-	// if (SensorViewWidgetClass)
-	// {
-	// 	SensorViewWidget = CreateWidget<UYCCSensorViewWidget>(this, SensorViewWidgetClass);
-	// 	if (SensorViewWidget)
-	// 	{
-	// 		SensorViewWidget->AddToViewport(10);
-	// 		SensorViewWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	// 	}
-	// }
+	if (SensorViewWidgetClass)
+	{
+		SensorViewWidget = CreateWidget<UYCCSensorViewWidget>(this, SensorViewWidgetClass);
+		if (SensorViewWidget)
+		{
+			SensorViewWidget->AddToViewport(10);
+			SensorViewWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+	}
 }
 
 void AYCCPlayerController::SetupInputComponent()

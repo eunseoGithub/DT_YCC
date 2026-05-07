@@ -6,6 +6,8 @@
 
 class AYeongCarCarPawn;
 class UInputMappingContext;
+class UYCCSensorViewWidget;
+class UTextureRenderTarget2D;
 
 UCLASS()
 class YEONGCARCAR_API AYCCPlayerController : public APlayerController
@@ -38,15 +40,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Vehicle|Respawn")
 	TSubclassOf<AYeongCarCarPawn> VehiclePawnClass;
 	
-	// UPROPERTY(EditAnywhere, Category="Vehicle|UI")
-	// TSubclassOf<USensorViewWidget> SensorViewWidgetClass;
-	
+	UPROPERTY(EditAnywhere, Category="Vehicle|UI")
+	TSubclassOf<UYCCSensorViewWidget> SensorViewWidgetClass;
+
 	UPROPERTY()
 	TObjectPtr<AYeongCarCarPawn> VehiclePawn;
-	
+
 	UPROPERTY()
 	TObjectPtr<UUserWidget> MobileControlWidget;
-	
-	// UPROPERTY()
-	// TObjectPtr<UYCCSensorViewWidget> SensorViewWidget;
+
+	UPROPERTY()
+	TObjectPtr<UYCCSensorViewWidget> SensorViewWidget;
 };
