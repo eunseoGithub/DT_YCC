@@ -2,6 +2,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "Base/Car/YeongCarCarPawn.h"
+#include "Base/UI/LapTimerWidget.h"
 #include "Components/SlateWrapperTypes.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -37,8 +38,21 @@ bool AYCCPlayerController::IsLidarViewVisible() const
 void AYCCPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	bAttachToPawn = true;
+
+	if (LapTimerWidgetClass)
+	{
+		LapTimerWidget = CreateWidget<ULapTimerWidget>(this, LapTimerWidgetClass);
+		if (LapTimerWidget)
+		{
+			LapTimerWidget->AddToViewport(5);
+			LapTimerWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			if (VehiclePawn)
+				LapTimerWidget->InitWithSplineFollower(VehiclePawn->GetSplineFollower());
+		}
+	}
 
 	if (SensorViewWidgetClass)
 	{
@@ -72,6 +86,9 @@ void AYCCPlayerController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 	VehiclePawn = CastChecked<AYeongCarCarPawn>(InPawn);
 	VehiclePawn->OnDestroyed.AddDynamic(this, &AYCCPlayerController::OnPawnDestroyed);
+
+	if (LapTimerWidget)
+		LapTimerWidget->InitWithSplineFollower(VehiclePawn->GetSplineFollower());
 }
 
 void AYCCPlayerController::OnPawnDestroyed(AActor* DestroyedPawn)

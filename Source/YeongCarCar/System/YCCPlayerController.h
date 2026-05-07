@@ -8,6 +8,7 @@ class AYeongCarCarPawn;
 class UInputMappingContext;
 class UYCCSensorViewWidget;
 class UTextureRenderTarget2D;
+class ULapTimerWidget;
 
 UCLASS()
 class YEONGCARCAR_API AYCCPlayerController : public APlayerController
@@ -43,6 +44,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Vehicle|UI")
 	TSubclassOf<UYCCSensorViewWidget> SensorViewWidgetClass;
 
+	UPROPERTY(EditAnywhere, Category="Vehicle|UI")
+	TSubclassOf<ULapTimerWidget> LapTimerWidgetClass;
+
 	UPROPERTY()
 	TObjectPtr<AYeongCarCarPawn> VehiclePawn;
 
@@ -51,4 +55,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UYCCSensorViewWidget> SensorViewWidget;
+
+	UPROPERTY()
+	TObjectPtr<ULapTimerWidget> LapTimerWidget;
 };
