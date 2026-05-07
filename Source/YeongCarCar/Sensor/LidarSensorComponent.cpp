@@ -1,4 +1,4 @@
-#include "Sensor/LidarSensorComponent.h"
+#include "LidarSensorComponent.h"
 #include "Engine/World.h"
 #include "HAL/PlatformFileManager.h"
 #include "Misc/Paths.h"
@@ -160,7 +160,7 @@ void ULidarSensorComponent::RefreshSettings()
 	bDirectionsDirty = true;
 	BevConfig.ViewRange = Config.MaxRange;
 	
-	// TODO: BevRenderer 이후 
+	// TODO: 주석해제 해야함  
 	// if (BevRenderer) BevRenderer->UpdateConfig(BevConfig);
 	
 	
@@ -290,7 +290,7 @@ void ULidarSensorComponent::CollectAsyncResults()
 	ScanPoints.Reserve(Config.GetTotalPoints());
 	ScanIntensities.Reserve(Config.GetTotalPoints());
 
-	// TODO: BevRenderer
+	// TODO: 주석해제 해야함 
 	// if (BevRenderer)
 	// 	BevRenderer->RenderPointCloud(LastPointCloud, PendingTransform);
 

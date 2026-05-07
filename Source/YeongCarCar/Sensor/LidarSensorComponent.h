@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "Sensor/CameraSensorTypes.h"
+#include "CameraSensorTypes.h"
 #include "LidarSensorComponent.generated.h"
 
 
