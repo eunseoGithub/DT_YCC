@@ -204,4 +204,26 @@ void AYeongCarCarPawn::ResetVehicle(const FInputActionValue& Value)
 	UE_LOG(LogTemplateVehicle, Error, TEXT("Reset Vehicle"));
 }
 
+void AYeongCarCarPawn::DoThrottle(float Value)
+{
+	ChaosVehicleMovement->SetThrottleInput(Value);
+}
+
+void AYeongCarCarPawn::DoBrake(float Value)
+{
+	ChaosVehicleMovement->SetBrakeInput(Value);
+	BrakeLights(Value > 0.05f);
+}
+
+void AYeongCarCarPawn::DoBrakeStart()
+{
+	ChaosVehicleMovement->SetBrakeInput(1.0f);
+	BrakeLights(true);
+}
+
+void AYeongCarCarPawn::DoSteering(float Value)
+{
+	ChaosVehicleMovement->SetSteeringInput(Value);
+}
+
 #undef LOCTEXT_NAMESPACE

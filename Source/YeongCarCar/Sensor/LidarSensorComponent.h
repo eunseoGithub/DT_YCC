@@ -88,7 +88,7 @@ private:
 	const FLidarPointCloudData& GetPointCloud() const { return LastPointCloud; }
 
 	UPROPERTY()
-	TObjectPtr<class ULidarBevRenderer> BevRenderer;
+	TObjectPtr<class UYCCLidarBevRenderer> BevRenderer;
 	
 private:
 

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehiclePawn.h"
+#include "Base/Component/SplineFollowerComponent.h"
 #include "YeongCarCarPawn.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
-class USplineFollowerComponent;
 class UInputAction;
 class UChaosWheeledVehicleMovementComponent;
 struct FInputActionValue;
@@ -139,4 +139,10 @@ public:
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 	/** Returns the SplineFollowerComponent if one is attached */
 	FORCEINLINE USplineFollowerComponent* GetSplineFollower() const { return FindComponentByClass<USplineFollowerComponent>(); }
+
+	/** Programmatic vehicle control — used by SplineFollowerComponent */
+	void DoThrottle(float Value);
+	void DoBrake(float Value);
+	void DoBrakeStart();
+	void DoSteering(float Value);
 };
