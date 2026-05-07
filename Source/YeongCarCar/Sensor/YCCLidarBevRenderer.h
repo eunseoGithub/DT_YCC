@@ -13,7 +13,7 @@ class YEONGCARCAR_API UYCCLidarBevRenderer : public UObject
 	GENERATED_BODY()
 	
 public:
-	void Initalize(const FBevRenderConfig& InConfig);
+	void Initialize(const FBevRenderConfig& InConfig);
 	void RenderPointCloud(const FLidarPointCloudData& PointCloud, const FTransform& SensorTransform);
 	UTexture2D* GetRenderTarget() const { return DynamicTexture; }
 	void UpdateConfig(const FBevRenderConfig& InConfig);

@@ -1,7 +1,7 @@
 ﻿#include "Sensor/YCCLidarBevRenderer.h"
 #include "Engine/Texture2D.h"
 
-void UYCCLidarBevRenderer::Initalize(const FBevRenderConfig& InConfig)
+void UYCCLidarBevRenderer::Initialize(const FBevRenderConfig& InConfig)
 {
     Config = InConfig;
     CreateTexture();
