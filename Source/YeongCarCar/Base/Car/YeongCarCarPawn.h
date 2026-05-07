@@ -4,145 +4,163 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehiclePawn.h"
-#include "Base/Component/SplineFollowerComponent.h"
 #include "YeongCarCarPawn.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
 class UChaosWheeledVehicleMovementComponent;
+class UCameraSensorComponent;
+class ULidarSensorComponent;
+class USplineFollowerComponent;
+class UYCCAgentDataLoggerComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateVehicle, Log, All);
 
-/**
- *  Vehicle Pawn class
- *  Handles common functionality for all vehicle types,
- *  including input handling and camera management.
- *  
- *  Specific vehicle configurations are handled in subclasses.
- */
 UCLASS(abstract)
-class AYeongCarCarPawn : public AWheeledVehiclePawn
+class YEONGCARCAR_API AYeongCarCarPawn : public AWheeledVehiclePawn
 {
 	GENERATED_BODY()
-
-	/** Spring Arm for the front camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* FrontSpringArm;
-
-	/** Front Camera component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FrontCamera;
-
-	/** Spring Arm for the back camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* BackSpringArm;
-
-	/** Back Camera component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* BackCamera;
-
-	/** Cast pointer to the Chaos Vehicle movement component */
-	TObjectPtr<UChaosWheeledVehicleMovementComponent> ChaosVehicleMovement;
-
-protected:
-
-	/** Steering Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* SteeringAction;
-
-	/** Throttle Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* ThrottleAction;
-
-	/** Brake Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* BrakeAction;
-
-	/** Handbrake Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* HandbrakeAction;
-
-	/** Look Around Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* LookAroundAction;
-
-	/** Toggle Camera Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* ToggleCameraAction;
-
-	/** Reset Vehicle Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* ResetVehicleAction;
-
-	/** Keeps track of which camera is active */
-	bool bFrontCameraActive = false;
 
 public:
 	AYeongCarCarPawn();
 
-	// Begin Pawn interface
-
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-
-	// End Pawn interface
-
-	// Begin Actor interface
-
+	virtual void BeginPlay() override;
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float Delta) override;
 
-	// End Actor interface
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoSteering(float SteeringValue);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoThrottle(float ThrottleValue);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoBrake(float BrakeValue);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoBrakeStart();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoBrakeStop();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoHandbrakeStart();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoHandbrakeStop();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoLookAround(float YawDelta);
+
+	FORCEINLINE USpringArmComponent* GetFrontSpringArm() const { return FrontSpringArm; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FrontCamera; }
+	FORCEINLINE USpringArmComponent* GetBackSpringArm() const { return BackSpringArm; }
+	FORCEINLINE UCameraComponent* GetBackCamera() const { return BackCamera; }
+	FORCEINLINE UChaosWheeledVehicleMovementComponent* GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
+	FORCEINLINE UCameraSensorComponent* GetCameraSensor() const { return CameraSensor; }
+	FORCEINLINE ULidarSensorComponent* GetLidarSensor() const { return LidarSensor; }
+	FORCEINLINE UYCCAgentDataLoggerComponent* GetDataLogger() const { return DataLogger; }
+	FORCEINLINE USplineFollowerComponent* GetSplineFollower() const { return SplineFollower; }
 
 protected:
-
-	/** Handles steering input */
-	void Steering(const FInputActionValue& Value);
-
-	/** Handles throttle input */
-	void Throttle(const FInputActionValue& Value);
-
-	/** Handles brake input */
-	void Brake(const FInputActionValue& Value);
-
-	/** Handles brake start/stop inputs */
-	void StartBrake(const FInputActionValue& Value);
-	void StopBrake(const FInputActionValue& Value);
-
-	/** Handles handbrake start/stop inputs */
-	void StartHandbrake(const FInputActionValue& Value);
-	void StopHandbrake(const FInputActionValue& Value);
-
-	/** Handles look around input */
-	void LookAround(const FInputActionValue& Value);
-
-	/** Handles toggle camera input */
-	void ToggleCamera(const FInputActionValue& Value);
-
-	/** Handles reset vehicle input */
-	void ResetVehicle(const FInputActionValue& Value);
-
-	/** Called when the brake lights are turned on or off */
 	UFUNCTION(BlueprintImplementableEvent, Category="Vehicle")
 	void BrakeLights(bool bBraking);
 
-public:
-	/** Returns the front spring arm subobject */
-	FORCEINLINE USpringArmComponent* GetFrontSpringArm() const { return FrontSpringArm; }
-	/** Returns the front camera subobject */
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FrontCamera; }
-	/** Returns the back spring arm subobject */
-	FORCEINLINE USpringArmComponent* GetBackSpringArm() const { return BackSpringArm; }
-	/** Returns the back camera subobject */
-	FORCEINLINE UCameraComponent* GetBackCamera() const { return BackCamera; }
-	/** Returns the cast Chaos Vehicle Movement subobject */
-	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
-	/** Returns the SplineFollowerComponent if one is attached */
-	FORCEINLINE USplineFollowerComponent* GetSplineFollower() const { return FindComponentByClass<USplineFollowerComponent>(); }
+	UFUNCTION()
+	void FlippedCheck();
 
-	/** Programmatic vehicle control — used by SplineFollowerComponent */
-	void DoThrottle(float Value);
-	void DoBrake(float Value);
-	void DoBrakeStart();
-	void DoSteering(float Value);
+private:
+	void Steering(const FInputActionValue& Value);
+	void Throttle(const FInputActionValue& Value);
+	void Brake(const FInputActionValue& Value);
+	void StartBrake(const FInputActionValue& Value);
+	void StopBrake(const FInputActionValue& Value);
+	void StartHandbrake(const FInputActionValue& Value);
+	void StopHandbrake(const FInputActionValue& Value);
+	void LookAround(const FInputActionValue& Value);
+	void ToggleCamera(const FInputActionValue& Value);
+	void ResetVehicle(const FInputActionValue& Value);
+	void ToggleSensorView(const FInputActionValue& Value);
+	void ToggleLidarView(const FInputActionValue& Value);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoToggleCamera();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoResetVehicle();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoToggleSensorView();
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void DoToggleLidarView();
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<USpringArmComponent> FrontSpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UCameraComponent> FrontCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<USpringArmComponent> BackSpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UCameraComponent> BackCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UCameraSensorComponent> CameraSensor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<ULidarSensorComponent> LidarSensor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UYCCAgentDataLoggerComponent> DataLogger;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<USplineFollowerComponent> SplineFollower;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UChaosWheeledVehicleMovementComponent> ChaosVehicleMovement;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> SteeringAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ThrottleAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> BrakeAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> HandbrakeAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> LookAroundAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ToggleCameraAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ResetVehicleAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ToggleCameraViewAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ToggleLidarViewAction;
+
+	UPROPERTY(EditAnywhere, Category="Flip Check", meta=(Units="s"))
+	float FlipCheckTime = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category="Flip Check")
+	float FlipCheckMinDot = -0.2f;
+
+private:
+	bool bFrontCameraActive = false;
+	bool bPreviousFlipCheck = false;
+	FTimerHandle FlipCheckTimer;
 };

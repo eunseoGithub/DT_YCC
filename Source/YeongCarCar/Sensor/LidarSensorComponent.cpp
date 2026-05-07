@@ -1,4 +1,5 @@
 #include "LidarSensorComponent.h"
+#include "Sensor/YCCLidarBevRenderer.h"
 #include "Engine/World.h"
 #include "HAL/PlatformFileManager.h"
 #include "Misc/Paths.h"
@@ -47,9 +48,8 @@ void ULidarSensorComponent::InitializeSensor()
 {
 	BevConfig.ViewRange = Config.MaxRange;
 
-	// TODO: ULidarBevRenderer 완성 후 주석 해제 하면 될듯? 
-	// BevRenderer = NewObject<ULidarBevRenderer>(this, TEXT("BevRenderer"));
-	// BevRenderer->Initialize(BevConfig);
+	BevRenderer = NewObject<UYCCLidarBevRenderer>(this, TEXT("BevRenderer"));
+	BevRenderer->Initialize(BevConfig);
 
 	const int32 TotalPts = Config.GetTotalPoints();
 	PendingHandles.Reserve(TotalPts);
@@ -82,10 +82,8 @@ void ULidarSensorComponent::StopScan()
 }
 
 UTexture2D* ULidarSensorComponent::GetBevRenderTarget() const
-{ 
-	//TODO: 아래 주석으로 변경 
-	return nullptr; 
-	// return BevRenderer ? BevRenderer->GetRenderTarget() : nullptr;
+{
+	return BevRenderer ? BevRenderer->GetRenderTarget() : nullptr;
 }
 
 #if WITH_EDITOR
@@ -160,8 +158,7 @@ void ULidarSensorComponent::RefreshSettings()
 	bDirectionsDirty = true;
 	BevConfig.ViewRange = Config.MaxRange;
 	
-	// TODO: 주석해제 해야함  
-	// if (BevRenderer) BevRenderer->UpdateConfig(BevConfig);
+	if (BevRenderer) BevRenderer->UpdateConfig(BevConfig);
 	
 	
 	StopScanTimer();
@@ -290,9 +287,8 @@ void ULidarSensorComponent::CollectAsyncResults()
 	ScanPoints.Reserve(Config.GetTotalPoints());
 	ScanIntensities.Reserve(Config.GetTotalPoints());
 
-	// TODO: 주석해제 해야함 
-	// if (BevRenderer)
-	// 	BevRenderer->RenderPointCloud(LastPointCloud, PendingTransform);
+	if (BevRenderer)
+		BevRenderer->RenderPointCloud(LastPointCloud, PendingTransform);
 
 	if (bIsDataSaving && LastPointCloud.PointCount > 0)
 		SavePointCloudData();
