@@ -16,8 +16,12 @@ public class YeongCarCar : ModuleRules
 			"UMG", "Landscape", "RenderCore",
 			"RHI", "ImageWrapper"
 		});
-		
-		
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("LandscapeEditor");
+		}
+
 		PublicIncludePaths.AddRange(new string[] { "YeongCarCar" });
 	}
 }
