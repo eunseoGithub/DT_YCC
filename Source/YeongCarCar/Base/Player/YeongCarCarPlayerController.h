@@ -9,6 +9,7 @@
 class UInputMappingContext;
 class AYeongCarCarPawn;
 class UYeongCarCarUI;
+class ULapTimerWidget;
 
 /**
  *  Vehicle Player Controller class
@@ -45,7 +46,13 @@ protected:
 	/** Pointer to the UI widget */
 	TObjectPtr<UYeongCarCarUI> VehicleUI;
 
-	
+	UPROPERTY(EditAnywhere, Category="Vehicle|UI")
+	TSubclassOf<ULapTimerWidget> LapTimerWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<ULapTimerWidget> LapTimerWidget;
+
+
 
 	// Begin Actor interface
 protected:
